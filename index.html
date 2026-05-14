@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Monitor de Faltas — Redesign do SIGAA com melhorias de usabilidade baseadas nas Heurísticas de Nielsen.">
+  <title>Monitor de Faltas | IFC — SIGAA Redesign</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Favicon simples -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+</head>
+<body>
+
+  <!-- H7 / Acessibilidade: skip link -->
+  <a href="#main" class="skip-link">Pular para o conteúdo principal</a>
+
+  <!-- ==========================================
+       HEADER — H2: linguagem do mundo real
+       H4: consistência (branding institucional)
+       ========================================== -->
+  <header class="header" role="banner">
+    <div class="header__inner">
+      <div class="header__brand">
+        <div class="header__logo" aria-hidden="true">IFC</div>
+        <div>
+          <h1 class="header__title">Monitor de Faltas</h1>
+          <p class="header__subtitle">Sistema de Acompanhamento de Frequência</p>
+        </div>
+      </div>
+      <div class="header__meta">
+        <span class="header__semester" id="header-semester">
+          <!-- H1: visibilidade — mostra o semestre ativo -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+          Semestre: 2026-1
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       CONTEÚDO PRINCIPAL
+       ========================================== -->
+  <main class="main" id="main">
+
+    <!-- ========================================
+         BUSCA — H5: prevenção de erros
+         H6: reconhecimento ao invés de recordação
+         H10: ajuda contextual
+         ======================================== -->
+    <section class="search-section" aria-label="Busca de aluno">
+      <div class="search-card">
+        <h2 class="search-card__title">
+          <!-- Ícone de busca -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+          Buscar Discente
+        </h2>
+
+        <div class="search-form" role="search">
+          <!-- Campo de busca com autocomplete — H6 -->
+          <div class="form-group">
+            <label for="search-input">Nome ou Matrícula</label>
+            <div class="autocomplete-wrapper">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Ex: Ana Clara ou 20230001"
+                autocomplete="off"
+                spellcheck="false"
+                aria-describedby="input-hint"
+                aria-autocomplete="list"
+                aria-controls="autocomplete-list"
+              >
+              <!-- Dropdown de sugestões — H6 -->
+              <div class="autocomplete-list" id="autocomplete-list" role="listbox" aria-label="Sugestões de alunos"></div>
+            </div>
+            <!-- H5/H9: feedback de validação -->
+            <span class="input-hint" id="input-hint"></span>
+          </div>
+
+          <!-- Seletor de período — H6: reconhecimento -->
+          <div class="form-group">
+            <label for="select-periodo">Período Letivo</label>
+            <select id="select-periodo" aria-label="Selecionar período letivo">
+              <!-- Preenchido via JS -->
+            </select>
+          </div>
+
+          <!-- Ações — H3: controle do usuário -->
+          <div class="form-group" style="flex-direction:row; gap:0.5rem; align-self:end;">
+            <button class="btn btn--primary" id="btn-buscar" type="button" aria-label="Buscar aluno">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+              </svg>
+              Buscar
+            </button>
+            <!-- H3: saída de emergência — botão limpar sempre visível -->
+            <button class="btn btn--ghost" id="btn-limpar" type="button" aria-label="Limpar busca e resultados">
+              Limpar
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================
+         ÁREA DE RESULTADOS
+         Renderizada dinamicamente via JS
+         ======================================== -->
+    <div id="results-area" aria-live="polite"></div>
+
+  </main>
+
+  <!-- ==========================================
+       PAINEL LATERAL DE DETALHE — H3: saída
+       ========================================== -->
+  <div class="detail-panel__overlay" id="detail-overlay" aria-hidden="true"></div>
+  <aside class="detail-panel" id="detail-panel" role="dialog" aria-label="Detalhes da disciplina" aria-modal="true">
+    <div class="detail-panel__header">
+      <h3 class="detail-panel__title" id="detail-title">Detalhe</h3>
+      <!-- H3: botão de fechar claro -->
+      <button class="detail-panel__close" id="detail-close" aria-label="Fechar painel de detalhes" title="Fechar (Esc)">✕</button>
+    </div>
+    <div class="detail-panel__body" id="detail-body"></div>
+  </aside>
+
+  <!-- Toast de notificações — H9: reconhecer/diagnosticar erros -->
+  <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
+
+  <!-- ==========================================
+       FOOTER — H10: ajuda e documentação
+       ========================================== -->
+  <footer class="footer">
+    <p>
+      Monitor de Faltas — Redesign baseado nas
+      <a href="https://www.nngroup.com/articles/ten-usability-heuristics/" target="_blank" rel="noopener">
+        10 Heurísticas de Nielsen
+      </a>
+      · Trabalho de IHC · IFC Campus Videira · 2026
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
